@@ -24,16 +24,3 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 dirs = "5.0.1"
 thiserror = "1.0.64"
-
-[[permission]]
-identifier = "my-identifier"
-description = "This describes the impact and more."
-commands.allow = [
-    "create_file"
-]
-
-[[scope.allow]]
-my-scope = "$HOME/*"
-
-[[scope.deny]]
-my-scope = "$HOME/secret"
