@@ -7,21 +7,37 @@ fn greet() {
     println!("Hello there, I am from rust!");
 }
 
+#[derive(Debug, thiserror::Error)]
+enum Error {
+  #[error(transparent)]
+  Io(#[from] std::io::Error)
+}
+
+// we must manually implement serde::Serialize
+impl serde::Serialize for Error {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: serde::ser::Serializer,
+  {
+    serializer.serialize_str(self.to_string().as_ref())
+  }
+}
+
 #[tauri::command]
-fn create_file(file_name: &str) -> Result<String, String> {
+fn create_file(file_name: &str) -> Result<String, Error> {
     match desktop_dir() {
         Some(desktop_path) => {
-            let string_path = desktop_path.into_os_string().into_string().map_err(|err| err.into_string());
+            let string_path = desktop_path.into_os_string().into_string();
             let file_string = format!("{}{}{}", string_path.unwrap(), "/", file_name);
             println!("String path is {}",file_string);
 
             if Path::new(file_string.as_str()).exists() {
-                return Err("File already exists!".to_string());
+                println!("Error! File already exists!");
             } else {
-                File::create(file_string).map_err(|err| err.to_string())?;
+                File::create(file_string)?;
             }
         },
-        None => return Err("Could not determine the home directory.".to_string()),
+        None => println!("Error! Directory does not exist"),
     };
     Ok("File created successfully.".to_string())
 }
