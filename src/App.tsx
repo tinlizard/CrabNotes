@@ -1,12 +1,17 @@
-import Input from "./input";
+import Navbar from "./navbar";
 import "./App.css";
+import { useState } from "react";
 
 function App() {
+  const [input,setInput] = useState<string>("")
 
   return (
-    <main className="container">
-      <Input/>
-    </main>
+    <div className="container">
+      <Navbar input={input}/>
+      <div className="input">
+        <input type="text" onChange={(e)=>setInput(e.target.value)}></input>
+      </div>
+    </div>
   );
 }
 
