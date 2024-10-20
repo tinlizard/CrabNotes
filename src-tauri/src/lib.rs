@@ -8,7 +8,7 @@ enum Error {
   Io(#[from] std::io::Error)
 }
 
-// we must manually implement serde::Serialize
+//implementing serde::Serialize for easier error handling
 impl serde::Serialize for Error {
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
   where
