@@ -46,13 +46,16 @@ fn get_all_files() -> Vec<String> {
     Some(desktop_path) => {
       let string_path = desktop_path.into_os_string().into_string();
       let file_string = format!("{}{}", string_path.unwrap(), "/");
-
+      let file_string_clone = file_string.clone();
+      
       match read_dir(file_string) {
         Ok(files) =>{
           for file in files {
             match file {
               Ok(file) => {
-                all_files.push(file.path().into_os_string().into_string().expect("Error in expect"));
+                let desktop_file_string = file.path().into_os_string().into_string().expect("Error in expect");
+                let altered_file_string = desktop_file_string.replace(file_string_clone.as_str(), "");
+                all_files.push(altered_file_string);
                 for file in &mut all_files {
                   file.push('\n');
                 }

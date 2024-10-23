@@ -7,7 +7,8 @@ interface Input {
 };
 
 export default function Navbar({input}: Input) {
-    const [fileNames,setFileNames] = useState<any>("")
+    const [fileNames,setFileNames] = useState<any | string>("")
+    const [fileNamesArr,setFileNamesArr] = useState([])
 
     async function getFiles() {
         const files = await invoke('get_all_files')
@@ -16,9 +17,16 @@ export default function Navbar({input}: Input) {
 
     useEffect(()=>{
         getFiles()
-        console.log(typeof(fileNames))
-        console.log(fileNames)
+        //const fileArr = fileNames.split("")
+        //setFileNamesArr([...fileNamesArr,fileArr])
+
+        console.log(`type of fileNames is ${typeof(fileNames)}`)
+        console.log(`fileNames is: ${fileNames}`)
     },[])
+
+    const filesNamesArrLI = fileNamesArr.map((file,index)=>{
+        <li key={index}>{file}</li>
+    })
 
     return(
         <div className="navbar">
